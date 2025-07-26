@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IV Drip Dashboard</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    h1 {
+      color: #00bfa6;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 400px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .card p {
+      margin: 10px 0;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>💧 IV Drip Monitor Dashboard</h1>
+  <div class="card">
+    <p><strong>Patient ID:</strong> patient001</p>
+    <p><strong>Drops:</strong> <span id="dropCount">--</span></p>
+    <p><strong>DPM:</strong> <span id="dpm">--</span></p>
+    <p><strong>Last Updated:</strong> <span id="lastTime">--</span></p>
+  </div>
+
+  <script type="module">
+    // Firebase config from your project
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCamb67zvEtatYkNEjZDL7jUuZBvAxAaA8",
+      authDomain: "cseproject-5c32b.firebaseapp.com",
+      databaseURL: "https://cseproject-5c32b-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "cseproject-5c32b",
+      storageBucket: "cseproject-5c32b.appspot.com",
+      messagingSenderId: "333048619605",
+      appId: "1:333048619605:web:512edff6c71a28e5afeadc",
+      measurementId: "G-K2Y9HG89DL"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Reference to a specific patient
+    const patientID = "patient001";
+    const patientRef = ref(db, "patients/" + patientID);
+
+    // Real-time listener
+    onValue(patientRef, (snapshot) => {
+      const data = snapshot.val();
+      document.getElementById("dropCount").textContent = data?.dropCount ?? "--";
+      document.getElementById("dpm").textContent = data?.dpm ?? "--";
+      document.getElementById("lastTime").textContent = new Date().toLocaleTimeString();
+    });
+  </script>
+</body>
+</html>
